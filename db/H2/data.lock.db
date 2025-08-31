@@ -1,0 +1,6 @@
+#FileLock
+#Sun Aug 31 12:20:42 KST 2025
+hostName=host.docker.internal
+id=198fe242a6e9b882ef9be1cfb76727da521d7e51b4f
+method=file
+server=192.168.0.6\:60933

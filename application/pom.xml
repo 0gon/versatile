@@ -28,6 +28,11 @@
             <groupId>org.versatile</groupId>
             <artifactId>library</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.versatile</groupId>
+            <artifactId>core-security</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

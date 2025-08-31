@@ -35,6 +35,12 @@
 				<artifactId>library</artifactId>
 				<version>1.0-SNAPSHOT</version>
 			</dependency>
+
+			<dependency>
+				<groupId>org.versatile</groupId>
+				<artifactId>core-security</artifactId>
+				<version>1.0-SNAPSHOT</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 	
@@ -49,6 +55,13 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+
+		<!-- lombok -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 
