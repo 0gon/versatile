@@ -1,0 +1,17 @@
+spring:
+    application:
+        name: versatile
+    output:
+        ansi:
+            enabled: ALWAYS
+
+    jpa:
+        database-platform: org.hibernate.community.dialect.SQLiteDialect
+        hibernate:
+            ddl-auto: create # update
+    datasource:
+        url: jdbc:sqlite:database.sqlite
+        driver-class-name: org.sqlite.JDBC
+        username: 
+        password: 
+

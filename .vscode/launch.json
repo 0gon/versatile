@@ -6,23 +6,16 @@
     "configurations": [
         {
             "type": "java",
+            "name": "VersatileApplication",
+            "request": "launch",
+            "mainClass": "org.versatile.VersatileApplication",
+            "projectName": "versatile"
+        },
+        {
+            "type": "java",
             "name": "Current File",
             "request": "launch",
             "mainClass": "${file}"
-        },
-        {
-            "type": "java",
-            "name": "DemoApplication",
-            "request": "launch",
-            "mainClass": "org.versatile.application.DemoApplication",
-            "projectName": "application"
-        },
-        {
-            "type": "java",
-            "name": "Main",
-            "request": "launch",
-            "mainClass": "org.versatile.Main",
-            "projectName": "core-security"
         }
     ]
 }
