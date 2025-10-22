@@ -12,7 +12,8 @@ import java.io.IOException;
 public class AuthFilter implements jakarta.servlet.Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        log.info("action");
+        log.info("AuthFilter called");
+
         chain.doFilter(request, response);
     }
 }
