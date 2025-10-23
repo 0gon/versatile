@@ -9,6 +9,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
+import org.springframework.security.config.annotation.web.configurers.SessionManagementConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -18,36 +20,28 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class Config {
 
-    private final TokenAuthenticationFilter tokenAuthenticationFilter;
+    private final JwtAuthFilter tokenAuthenticationFilter;
+    private final CustomAuthenticationEntryPoint authenticationEntryPoint;
 
-    @Bean
-    public FilterRegistrationBean filterRegistrationBean() {
-        return new FilterRegistrationBean(new AuthFilter());
-    }
-
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring()
-                .requestMatchers("", "/error", "/favicon.ico", "/h2-console/**")
-                .requestMatchers(HttpMethod.POST, "/members");
-    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(req -> req
+                        .requestMatchers("/", "/error", "/favicon.ico", "/h2-console/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/members", "/login").permitAll()
+                        .anyRequest().authenticated())
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .logout(AbstractHttpConfigurer::disable)
-                .headers(c -> c.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable).disable())
-                .authorizeHttpRequests(req -> req.anyRequest().authenticated())
                 .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new TokenExceptionFilter(), tokenAuthenticationFilter.getClass())
+                .exceptionHandling(handle -> handle.authenticationEntryPoint(authenticationEntryPoint))
         ;
 
 
-        return null;
+        return http.build();
     }
 
     @Bean
