@@ -64,22 +64,13 @@ public class JwtUtil {
      * @param token
      * @return IsValidate
      */
-    public boolean validateToken(String token) {
+    public void validateToken(String token) throws JwtException {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-            return true;
-        } catch (SignatureException e) {
-             log.warn(e.getMessage());
-        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-            log.warn("Invalid JWT Token {}", e.getMessage());
-        } catch (ExpiredJwtException e) {
-            log.warn("Expired JWT Token {}", e.getMessage());
-        } catch (UnsupportedJwtException e) {
-            log.warn("Unsupported JWT Token {}", e.getMessage());
-        } catch (IllegalArgumentException e) {
-            log.warn("JWT claims string is empty. {}", e.getMessage());
+        } catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException | SignatureException |
+                 IllegalArgumentException e) {
+            throw new JwtException(e.getMessage(), e);
         }
-        return false;
     }
 
 

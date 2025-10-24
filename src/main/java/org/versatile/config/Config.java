@@ -37,7 +37,7 @@ public class Config {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .logout(AbstractHttpConfigurer::disable)
                 .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .exceptionHandling(handle -> handle.authenticationEntryPoint(authenticationEntryPoint))
+//                .exceptionHandling(handle -> handle.authenticationEntryPoint(authenticationEntryPoint))
         ;
 
 
