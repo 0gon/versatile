@@ -1,3 +1,6 @@
+server:
+    no: 1
+
 spring:
     devtools:
         livereload:
@@ -23,7 +26,8 @@ spring:
             enabled: true
 
     datasource:
-        url: jdbc:h2:tcp://localhost/D:/versatile/db/H2/data;
+#        url: jdbc:h2:tcp://localhost/~/db/H2/data;
+        url: jdbc:h2:tcp://localhost/C:\Dev\Project\versatile/db/H2/data;
         driver-class-name: org.h2.Driver
         username: sa
         password:
