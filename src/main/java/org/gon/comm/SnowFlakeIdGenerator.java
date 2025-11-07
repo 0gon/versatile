@@ -9,8 +9,8 @@ import java.lang.annotation.Target;
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
 
-@IdGeneratorType(HibernateIdGenerator.class)
+@IdGeneratorType(SnowflakeIdGeneratorImpl.class)
 @Retention( RetentionPolicy.RUNTIME)
 @Target({ FIELD, METHOD})
-public @interface MyIdGenerator {
+public @interface SnowFlakeIdGenerator {
 }
