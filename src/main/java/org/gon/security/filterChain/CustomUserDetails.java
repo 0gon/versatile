@@ -1,8 +1,10 @@
-package org.gon.security;
+package org.gon.security.filterChain;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.gon.domain.member.dto.CustomUserInfoDto;
+import org.gon.security.dto.CustomUserInfoDto;
+import org.gon.security.entity.Role;
+import org.gon.security.entity.RoleType;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,12 +22,11 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<String> roles = new ArrayList<>();
-        roles.add("ROLE_" + member.getRole().toString());
+        List<Role> roles = member.getRoles();
 
 
         return roles.stream()
-                .map(SimpleGrantedAuthority::new)
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getRoleType().getRoleName()))
                 .collect(Collectors.toList());
     }
 

@@ -1,74 +1,60 @@
 package org.gon;
 
 import org.gon.comm.SnowflakeIdGeneratorImpl;
+import org.gon.security.entity.RoleType;
 
 import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneOffset;
 import java.util.*;
 
 public class TestMain {
     public static void main(String[] args) {
-        SnowflakeIdGeneratorImpl generator = new SnowflakeIdGeneratorImpl(1, 1, Clock.systemUTC());
-        Set<Long> ids = Collections.synchronizedSet(new HashSet<>());
-
-        Thread thread1 = new Thread(() -> {
-            for (int i = 0; i < 1000; i++) {
-                ids.add(generator.nextId());
-            }
-        });
-
-        Thread thread2 = new Thread(() -> {
-            for (int i = 0; i < 1000; i++) {
-                ids.add(generator.nextId());
-            }
-        });
-
-        thread1.start();
-        thread2.start();
-        try {
-            thread1.join();
-            thread2.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        System.out.println(ids.size());
+        String string = RoleType.ADMIN.getRoleName();
+        System.out.println(string);
     }
+
+
+    static int size = 64;
+    static int datacenterBits = 6;
+    static int workerBits = 6;
+    static int sequenceBits = 12;
 
     public static String prettyBinary(long l) {
         String b = Long.toBinaryString(l);
-        String r = "";
-        for (int i = 0; i < 64; i++) {
-            if(64 - b.length() > i) {
-                r += "0";
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < size; i++) {
+            if(size - b.length() > i) {
+                sb.append("0");
             } else {
-                r += b.charAt(i - (64 - b.length()));
+                sb.append(b.charAt(i - (size - b.length())));
             }
 
             if((i + 1) % 4 == 0) {
-                r += " ";
+                sb.append(" ");
             }
         }
 
-        return r;
+        return sb.toString();
     }
 
+    public static Clock prev = null;
     public static String decodeId(long id) {
         String b = Long.toBinaryString(id);
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < 64; i++) {
-            if(64 - b.length() > i) {
-                sb.append("0");
-            } else {
-                sb.append(b.charAt(i - (64 - b.length())));
-            }
-        }
 
-        String binary = sb.toString();
-        long timestamp = Long.parseLong(binary.substring(0, 46), 2) + 1400000000000L;
+        String binary = TestMain.prettyBinary(id).replace(" ", "");
+
+        long timestamp = Long.parseLong(binary.substring(0, size - datacenterBits - workerBits - sequenceBits), 2) + 1400000000000L;
         Clock clock = Clock.fixed(java.time.Instant.ofEpochMilli(timestamp), java.time.ZoneOffset.UTC);
-        long datacenterId = Long.parseLong(binary.substring(46, 52), 2);
-        long workerId = Long.parseLong(binary.substring(52, 58), 2);
-        long sequence = Long.parseLong(binary.substring(58, 64), 2);
+        long datacenterId = Long.parseLong(binary.substring(size - datacenterBits - workerBits - sequenceBits, size - workerBits - sequenceBits), 2);
+        long workerId = Long.parseLong(binary.substring(size - workerBits - sequenceBits, size - sequenceBits), 2);
+        long sequence = Long.parseLong(binary.substring(size - sequenceBits, size), 2);
+
+        if(prev == null) {
+            prev = clock;
+        } else {
+            System.out.println(clock.instant().toEpochMilli() - prev.instant().toEpochMilli());
+        }
 
         return String.format("timestamp: %s, datacenterId: %d, workerId: %d, sequence: %d",
                 clock.instant(), datacenterId, workerId, sequence);

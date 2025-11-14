@@ -1,15 +1,14 @@
 package org.gon.config;
 
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.gon.comm.JwtUtil;
-import org.gon.security.CustomAccessDeniedHandler;
-import org.gon.security.CustomAuthenticationEntryPoint;
-import org.gon.security.CustomUserDetailsService;
-import org.gon.security.JwtAuthFilter;
+import org.gon.security.filterChain.CustomAccessDeniedHandler;
+import org.gon.security.filterChain.CustomAuthenticationEntryPoint;
+import org.gon.security.filterChain.CustomUserDetailsService;
+import org.gon.security.filterChain.JwtAuthFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -20,12 +19,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import java.time.Clock;
-
 @Configuration
-@EnableWebSecurity
 @AllArgsConstructor
-public class Config {
+@EnableWebSecurity
+@EnableMethodSecurity(jsr250Enabled = true)
+public class SecurityConfig {
 
     private final CustomUserDetailsService customUserDetailsService;
     private final JwtUtil jwtUtil;
@@ -38,15 +36,14 @@ public class Config {
         return new BCryptPasswordEncoder();
     }
 
-    // region security
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/health", "/error", "/h2-console/**", "/login", "/join").permitAll()
-                        .anyRequest().authenticated()
-                )
+//                .authorizeHttpRequests(authorize -> authorize
+//                        .requestMatchers( "/error", "/h2-console/**").permitAll()
+//                        .anyRequest().authenticated()
+//                )
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
@@ -65,7 +62,5 @@ public class Config {
 
         return http.build();
     }
-    // endregion security
-
 
 }

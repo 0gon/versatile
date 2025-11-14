@@ -1,9 +1,9 @@
-package org.gon.security;
+package org.gon.security.filterChain;
 
 import lombok.RequiredArgsConstructor;
-import org.gon.domain.member.entity.Member;
-import org.gon.domain.member.MemberRepository;
-import org.gon.domain.member.dto.CustomUserInfoDto;
+import org.gon.security.MemberRepository;
+import org.gon.security.entity.Member;
+import org.gon.security.dto.CustomUserInfoDto;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

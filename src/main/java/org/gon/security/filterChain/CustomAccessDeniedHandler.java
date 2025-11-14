@@ -1,4 +1,4 @@
-package org.gon.security;
+package org.gon.security.filterChain;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

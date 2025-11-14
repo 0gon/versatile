@@ -1,4 +1,4 @@
-package org.gon.domain.member.dto;
+package org.gon.security.dto;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

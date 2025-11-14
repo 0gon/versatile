@@ -11,30 +11,30 @@ import java.io.Serializable;
 import java.time.Clock;
 import java.time.Instant;
 
+/**
+ * 날짜 42bit, 데이터센터 4bit, 워커 4bit, 시퀀스 14bit
+ */
 @Component
 public class SnowflakeIdGeneratorImpl implements IdentifierGenerator, InitializingBean {
 
     private static final int DATACENTER_BITS = 6;
     private static final int WORKER_BITS = 6;
-    private static final int SEQUENCE_BITS = 6;
+    private static final int SEQUENCE_BITS = 12;
 
     private static final int maxDatacenterId = (int) (Math.pow(2, DATACENTER_BITS) - 1);
     private static final int maxWorkerId = (int) (Math.pow(2, WORKER_BITS) - 1);
     private static final int maxSequence = (int) (Math.pow(2, SEQUENCE_BITS) - 1);
 
-    private static final long CUSTOM_EPOCH = 1400000000000L;    // 41bit
+    private static final long CUSTOM_EPOCH = 1400000000000L;
     private final int datacenterID;
     private final int workerID;
     private volatile long sequence = 0L;
     private volatile long lastTimestamp = -1L;
-    private final Clock clock;
 
     public SnowflakeIdGeneratorImpl(@Value("${server.datacenter-id}") int datacenterId,
-                                    @Value("${server.worker-id}") int workerID,
-                                    Clock clock) {
+                                    @Value("${server.worker-id}") int workerID) {
         this.datacenterID = datacenterId;
         this.workerID = workerID;
-        this.clock = clock;
     }
 
     @Override
@@ -52,8 +52,8 @@ public class SnowflakeIdGeneratorImpl implements IdentifierGenerator, Initializi
         return nextId();
     }
 
-    private long timestamp() {
-        return Instant.now(clock).toEpochMilli() - CUSTOM_EPOCH;
+    private static long timestamp() {
+        return Instant.now().toEpochMilli() - CUSTOM_EPOCH;
     }
 
     public synchronized long nextId() {

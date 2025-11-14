@@ -1,8 +1,11 @@
-package org.gon.domain.member.dto;
+package org.gon.security.dto;
 
 import lombok.*;
-import org.gon.domain.member.entity.Member;
-import org.gon.domain.member.entity.RoleType;
+import org.gon.security.entity.Member;
+import org.gon.security.entity.Role;
+import org.gon.security.entity.RoleType;
+
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -16,14 +19,14 @@ public class CustomUserInfoDto {
 
     private String password;
 
-    private RoleType role;
+    private List<Role> roles;
 
     public static CustomUserInfoDto toDto(Member member) {
         return new CustomUserInfoDto(
                 member.getId(),
                 member.getEmail(),
                 member.getPassword(),
-                member.getRole()
+                member.getRoles()
         );
     }
 }

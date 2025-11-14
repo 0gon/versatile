@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://uicdn.toast.com/editor/3.2.2/toastui-editor-all.min.js"></script>
+    <link rel="stylesheet" href="/css/layout.css">
+</head>
+
+<body>
+
+
+<div>
+    <div class="w-full bg-[#f0f0f0]">
+        <div class="w-full max-w-1020 m-auto h-33 flex justify-between text-[11px]">
+            <div></div>
+
+
+            <div>
+                <ul class="flex list-none">
+                    <li class="pt-10 pr-10">
+                        <a href="/member/login">로그인</a>
+                    </li>
+
+
+                    <li class="pt-10 pr-10">
+                        <a href="/member/join">회원가입</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-1020 m-auto">
+        <div class="w-full flex">
+            <button class="w-110 h-110 bg-[#346aff] flex flex-col justify-center items-center gap-6 cursor-pointer">
+                <div class="w-3/10 h-4 bg-white"></div>
+                <div class="w-3/10 h-4 bg-white"></div>
+                <div class="w-3/10 h-4 bg-white"></div>
+            </button>
+
+            <div class="grow">
+                <div class="mt-30 ml-20 flex justify-between items-center">
+                    <div class="mr-10">
+                        <a href="/" class="text-4xl font-bold align-super">
+                            gonpang
+                        </a>
+                    </div>
+
+
+                    <div class="grow h-40">
+                        <div class="size-full border-2 border-[#4285f4] flex">
+                            <input class="grow px-10 focus:outline-none" type="text" placeholder="상품 검색"/>
+                            <button class="bg-[#4285f4] text-white cursor-pointer">검색</button>
+                        </div>
+                    </div>
+
+
+                    <div>
+                        <ul class="flex">
+                            <li class="mx-10">
+                                <a href="/member/me">내정보</a>
+                            </li>
+
+
+                            <li>
+                                <a href="">장바구니</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<main class="w-full h-1000 ">
+    <th:block freg></th:block>
+</main>
+
+<footer>
+    <div class="border-t-1 border-[#c4cdd5] text-center">
+        gonpang 상세정보
+    </div>
+
+
+    <div class="bg-[#333333] text-[#888888] text-center">
+        관련 법률
+    </div>
+</footer>
+
+
+</body>
+</html>

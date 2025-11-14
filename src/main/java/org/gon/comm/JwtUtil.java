@@ -4,7 +4,7 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
-import org.gon.domain.member.dto.CustomUserInfoDto;
+import org.gon.security.dto.CustomUserInfoDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -50,7 +50,7 @@ public class JwtUtil {
         Claims claims = Jwts.claims();
         claims.put("memberId", member.getMemberId());
         claims.put("email", member.getEmail());
-        claims.put("role", member.getRole());
+        claims.put("role", member.getRoles());
 
         ZonedDateTime now = ZonedDateTime.now();
         ZonedDateTime tokenValidity = now.plusSeconds(expireTime);

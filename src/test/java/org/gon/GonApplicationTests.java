@@ -1,8 +1,9 @@
 package org.gon;
 
-import org.gon.domain.member.MemberRepository;
-import org.gon.domain.member.entity.Member;
-import org.gon.domain.member.entity.RoleType;
+import org.gon.security.MemberRepository;
+import org.gon.security.entity.Member;
+import org.gon.security.entity.Role;
+import org.gon.security.entity.RoleType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,6 +13,8 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Clock;
+import java.util.ArrayList;
+import java.util.List;
 
 @SpringBootTest
 @Transactional
@@ -36,8 +39,8 @@ class GonApplicationTests {
 
     @Test
     void test() {
-        Member save = memberRepository.save(new Member("test", "test", RoleType.USER));
-        Member save1 = memberRepository.save(new Member("test2", "test2", RoleType.USER));
+        Member save = memberRepository.save(new Member("test", "test"));
+        Member save1 = memberRepository.save(new Member("test2", "test2"));
         System.out.println(TestMain.prettyBinary(save.getId()));
         System.out.println(TestMain.prettyBinary(save1.getId()));
     }
