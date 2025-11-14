@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+          integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <link rel="stylesheet" href="/css/default.css">
+</head>
+
+<body>
+
+
+<div th:replace="~{/component/header.html :: header}"></div>
+
+
+<main class="w-full">
+    <div class="w-full max-w-1020 m-auto flex justify-center items-center h-full">
+        <form id="login-form" class="w-400 h-300 border-2 border-gray-300 p-20 flex flex-col justify-center">
+            <h2 class="text-2xl font-bold mb-10 text-center">로그인</h2>
+            <div class="mb-10">
+                <input type="text" id="email" name="email" placeholder="아이디"
+                       class="w-full border-2 border-gray-300 p-2 pl-10 pr-40" required>
+            </div>
+            <div class="mb-10 relative">
+                <input type="password" id="password" name="password" placeholder="비밀번호"
+                       class="w-full border-2 border-gray-300 p-2 pl-10 pr-40" required>
+                <i id="pw-show" class="fas fa-eye fa-lg absolute right-5 top-1/2 text-gray-500 cursor-pointer"></i>
+            </div>
+
+            <div id="responseMessage"></div>
+
+            <button type="submit" class="w-full bg-blue-500 text-white p-2 hover:bg-blue-600">로그인</button>
+            <button type="button" class="w-full bg-gray-500 text-white p-2 mt-5 hover:bg-gray-600"
+                    onclick="location.href='/member/join'">회원가입
+            </button>
+            <button type="button" class="w-full bg-gray-500 text-white p-2 mt-5 hover:bg-gray-600"
+                    onclick="location.href='/member/find'">아이디 비밀번호 찾기
+            </button>
+        </form>
+    </div>
+</main>
+
+
+<script type="module">
+  import { togglePassword } from '/js/module/togglePassword.js'
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const button = document.querySelector('#pw-show')
+    const input = document.querySelector('#password')
+    togglePassword(button, input)
+
+    const form = document.getElementById('login-form')
+    const output = document.getElementById('responseMessage')
+
+    form.addEventListener('submit', function (event) {
+      event.preventDefault()
+      submitFormData()
+    })
+
+    async function submitFormData () {
+      const formData = new FormData(form)
+      // FormData 객체를 JSON 객체로 변환합니다.
+      const payload = Object.fromEntries(formData)
+
+      const API_URL = '/data' // 실제 API 주소로 변경
+
+      console.log(JSON.stringify(payload))
+
+      try {
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        })
+
+        // HTTP 상태 코드가 200번대(성공)가 아니면 에러를 던집니다.
+        if (!response.ok) {
+          // response.status는 HTTP 상태 코드 (예: 404, 500)
+          throw new Error(`HTTP Error! Status: ${response.status}`)
+        }
+
+        // 응답 본문을 JSON 형식으로 파싱합니다.
+        const result = await response.json()
+
+        // 폼 제출 성공 및 응답 표시
+        output.textContent = '✅ 데이터 제출 성공! 응답: \n' + JSON.stringify(result, null, 2)
+
+      } catch (error) {
+        // 네트워크 오류나 위의 response.ok에서 던져진 에러를 처리합니다.
+        output.textContent = '❌ 요청 실패: ' + error.message
+        console.error('Fetch Error:', error)
+      }
+    }
+  })
+</script>
+
+<footer th:replace="~{/component/footer.html :: footer}"></footer>
+
+
+</body>
+</html>
