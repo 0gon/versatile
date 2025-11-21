@@ -2,7 +2,7 @@ package org.gon.domain.wms.item;
 
 import jakarta.annotation.security.PermitAll;
 import lombok.RequiredArgsConstructor;
-import org.gon.security.entity.RoleType;
+import org.gon.domain.member.entity.RoleType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 

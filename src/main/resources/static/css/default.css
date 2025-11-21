@@ -1,9 +1,0 @@
-:root {
-    --spacing: 1px !important;
-}
-
-html, body {
-    width: 100%;
-    padding: 0;
-    background-color: #ffffff;
-}

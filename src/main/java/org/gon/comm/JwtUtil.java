@@ -4,11 +4,10 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
-import org.gon.security.dto.CustomUserInfoDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.security.Key;
+import javax.crypto.SecretKey;
 import java.time.ZonedDateTime;
 import java.util.Date;
 
@@ -16,8 +15,12 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    private final Key key;
+    private final SecretKey key;
     private final long accessTokenExpTime;
+    public static final long REFRESH_TOKEN_EXP_TIME = 604800L; // 7일 (초 단위)
+
+    private final String issuer = "gonpang-server-1";
+    private final String audience = "gonpang-server";
 
     public JwtUtil(
             @Value("${jwt.secret}") String secretKey,
@@ -28,63 +31,43 @@ public class JwtUtil {
         this.accessTokenExpTime = accessTokenExpTime;
     }
 
-    /**
-     * Access Token 생성
-     *
-     * @param member
-     * @return Access Token String
-     */
-    public String createAccessToken(CustomUserInfoDto member) {
-        return createToken(member, accessTokenExpTime);
+    public String createAccessToken(Long subject) {
+        return createToken(subject, accessTokenExpTime);
+    }
+
+    public String createRefreshToken(Long subject) {
+        return createToken(subject, REFRESH_TOKEN_EXP_TIME);
     }
 
 
     /**
      * JWT 생성
-     *
-     * @param member
-     * @param expireTime
-     * @return JWT String
      */
-    private String createToken(CustomUserInfoDto member, long expireTime) {
-        Claims claims = Jwts.claims();
-        claims.put("memberId", member.getMemberId());
-        claims.put("email", member.getEmail());
-        claims.put("role", member.getRoles());
+    private String createToken(Long subject, long expireTime) {
 
         ZonedDateTime now = ZonedDateTime.now();
-        ZonedDateTime tokenValidity = now.plusSeconds(expireTime);
+        ZonedDateTime expireDateTime = now.plusSeconds(expireTime);
 
 
         return Jwts.builder()
-                .setClaims(claims)
-                .setIssuedAt(Date.from(now.toInstant()))
-                .setExpiration(Date.from(tokenValidity.toInstant()))
-                .signWith(key, SignatureAlgorithm.HS256)
+                .claims()
+                    .issuer(issuer) // 발급자
+                    .subject(String.valueOf(subject)) // 식별자
+                    .audience() // 대상
+                        .add(audience).and()
+                    .issuedAt(Date.from(now.toInstant()))
+                    .expiration(Date.from(expireDateTime.toInstant())).and()
+                .signWith(key)
                 .compact();
     }
 
 
     /**
-     * Token에서 User ID 추출
-     *
-     * @param token
-     * @return User ID
-     */
-    public Long getUserId(String token) {
-        return parseClaims(token).get("memberId", Long.class);
-    }
-
-
-    /**
      * JWT 검증
-     *
-     * @param token
-     * @return IsValidate
      */
     public boolean validateToken(String token) {
         try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            Jwts.parser().verifyWith(key).build().parseSignedClaims(token);
             return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
             log.info("Invalid JWT Token", e);
@@ -101,13 +84,10 @@ public class JwtUtil {
 
     /**
      * JWT Claims 추출
-     *
-     * @param accessToken
-     * @return JWT Claims
      */
-    public Claims parseClaims(String accessToken) {
+    public Claims getClaims(String token) {
         try {
-            return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken).getBody();
+            return Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload();
         } catch (ExpiredJwtException e) {
             return e.getClaims();
         }

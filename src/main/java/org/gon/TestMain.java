@@ -1,17 +1,22 @@
 package org.gon;
 
-import org.gon.comm.SnowflakeIdGeneratorImpl;
-import org.gon.security.entity.RoleType;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
+import org.gon.domain.member.entity.RoleType;
 
+import java.security.Key;
 import java.time.Clock;
-import java.time.Instant;
-import java.time.ZoneOffset;
-import java.util.*;
 
 public class TestMain {
     public static void main(String[] args) {
-        String string = RoleType.ADMIN.getRoleName();
-        System.out.println(string);
+        String s = "VlwEyVBsYt9V7zq57TejMnVUyzblYcfPQye08f7MGVA9Xk";
+        System.out.println(s);
+        byte[] b = Decoders.BASE64.decode(s);
+        System.out.println(b.length);
+        Key key = Keys.hmacShaKeyFor(b);
+        System.out.println(key.getAlgorithm());
+
+
     }
 
 
